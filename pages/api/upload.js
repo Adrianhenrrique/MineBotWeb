@@ -1,11 +1,11 @@
-import { db, storage } from '../../utils/firebase';
+import { db, storage } from '@/utils/firebase';
 import { ref, uploadString } from 'firebase/storage';
 import { doc, setDoc } from 'firebase/firestore';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { ticketId, html } = req.body;
+  const { ticketId, html, password, expiresAt } = req.body;
   if (!ticketId || !html) return res.status(400).json({ error: 'Missing data' });
 
   try {
@@ -17,6 +17,8 @@ export default async function handler(req, res) {
       ticketId,
       createdAt: new Date().toISOString(),
       url,
+      password: password || null,
+      expiresAt: expiresAt || null,
     });
 
     return res.status(200).json({ url });
